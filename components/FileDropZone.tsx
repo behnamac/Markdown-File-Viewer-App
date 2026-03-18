@@ -96,8 +96,9 @@ export function FileDropZone({ onFilesLoad, onError }: FileDropZoneProps) {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       className={`
-        flex min-h-[200px] cursor-pointer flex-col items-center justify-center
-        rounded-lg border-2 border-dashed transition-colors
+        flex min-h-[9.5rem] cursor-pointer touch-manipulation flex-col items-center
+        justify-center rounded-lg border-2 border-dashed px-3 py-4 transition-colors
+        active:bg-gray-100 sm:min-h-[180px] md:min-h-[200px] md:px-4 md:py-6
         ${
           isDragging
             ? "border-blue-500 bg-blue-50"
@@ -114,7 +115,7 @@ export function FileDropZone({ onFilesLoad, onError }: FileDropZoneProps) {
         className="hidden"
       />
       <svg
-        className="mb-3 h-12 w-12 text-gray-400"
+        className="mb-2 h-9 w-9 shrink-0 text-gray-400 sm:mb-3 sm:h-10 sm:w-10 md:h-12 md:w-12"
         stroke="currentColor"
         fill="none"
         viewBox="0 0 48 48"
@@ -126,10 +127,10 @@ export function FileDropZone({ onFilesLoad, onError }: FileDropZoneProps) {
           strokeLinejoin="round"
         />
       </svg>
-      <p className="mb-1 text-center text-sm font-medium text-gray-600">
+      <p className="mb-1 max-w-[16rem] text-center text-xs font-medium leading-snug text-gray-600 sm:max-w-none sm:text-sm">
         Drop .MD files here or click to browse
       </p>
-      <p className="text-center text-xs text-gray-500">
+      <p className="max-w-[14rem] text-center text-[11px] text-gray-500 sm:max-w-none sm:text-xs">
         Multiple .md / .markdown files supported
       </p>
     </div>

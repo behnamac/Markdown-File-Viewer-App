@@ -34,19 +34,19 @@ export default function Home() {
 
   return (
     <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-gray-50">
-      <header className="shrink-0 grid grid-cols-[1fr_auto_1fr] items-center gap-2 border-b border-gray-200 bg-white px-6 py-4">
-        <h1 className="min-w-0 truncate text-xl font-semibold text-gray-900">
+      <header className="shrink-0 grid grid-cols-[1fr_auto_1fr] items-center gap-1 border-b border-gray-200 bg-white px-3 py-3 sm:gap-2 sm:px-6 sm:py-4">
+        <h1 className="min-w-0 truncate text-base font-semibold leading-tight text-gray-900 sm:text-lg md:text-xl">
           Markdown File Viewer
         </h1>
         <div className="flex justify-center">
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+            className="flex min-h-11 min-w-11 touch-manipulation items-center justify-center rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 sm:min-h-0 sm:min-w-0"
             aria-label="Refresh page"
           >
             <svg
-              className="h-6 w-6"
+              className="h-5 w-5 sm:h-6 sm:w-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -66,16 +66,16 @@ export default function Home() {
 
       <main className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
         {uploadPanelOpen ? (
-          <section className="flex max-h-[min(44dvh,26rem)] shrink-0 flex-col overflow-y-auto border-b border-gray-200 bg-gray-50 p-6 md:max-h-none md:h-full md:w-80 md:shrink-0 md:overflow-hidden md:border-b-0 md:border-r">
+          <section className="flex max-h-[min(38dvh,24rem)] shrink-0 flex-col overflow-y-auto overscroll-y-contain border-b border-gray-200 bg-gray-50 p-3 sm:max-h-[min(42dvh,26rem)] sm:p-4 md:max-h-none md:h-full md:w-80 md:shrink-0 md:overflow-hidden md:border-b-0 md:border-r md:p-6">
             <div className="shrink-0">
-              <div className="mb-3 flex items-center justify-between gap-2">
-                <h2 className="text-sm font-medium text-gray-600">
+              <div className="mb-2 flex items-center justify-between gap-2 sm:mb-3">
+                <h2 className="text-xs font-medium text-gray-600 sm:text-sm">
                   Upload files
                 </h2>
                 <button
                   type="button"
                   onClick={() => setUploadPanelOpen(false)}
-                  className="flex shrink-0 items-center gap-1 rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-600 shadow-sm transition-colors hover:bg-gray-50 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  className="flex min-h-10 shrink-0 touch-manipulation items-center gap-1 rounded-lg border border-gray-200 bg-white px-2.5 py-2 text-xs font-medium text-gray-600 shadow-sm transition-colors hover:bg-gray-50 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 sm:min-h-0 sm:py-1.5"
                   aria-label="Hide upload panel"
                 >
                   <svg
@@ -97,22 +97,24 @@ export default function Home() {
               </div>
               <FileDropZone onFilesLoad={handleFilesLoad} onError={setError} />
               {error && (
-                <p className="mt-2 text-sm text-amber-700">{error}</p>
+                <p className="mt-2 break-words text-xs text-amber-700 sm:text-sm">
+                  {error}
+                </p>
               )}
             </div>
 
             {files.length > 0 && (
-              <div className="mt-4 flex min-h-0 flex-1 flex-col overflow-hidden">
-                <h3 className="mb-2 shrink-0 text-xs font-medium uppercase tracking-wide text-gray-500">
+              <div className="mt-3 flex min-h-0 flex-1 flex-col overflow-hidden sm:mt-4">
+                <h3 className="mb-1.5 shrink-0 text-[10px] font-medium uppercase tracking-wide text-gray-500 sm:mb-2 sm:text-xs">
                   Your files ({files.length})
                 </h3>
-                <ul className="min-h-0 flex-1 space-y-1 overflow-y-auto rounded-lg border border-gray-200 bg-white p-2 shadow-sm">
+                <ul className="min-h-0 flex-1 space-y-0.5 overflow-y-auto overscroll-y-contain rounded-lg border border-gray-200 bg-white p-1.5 shadow-sm sm:space-y-1 sm:p-2">
                   {files.map((f) => (
                     <li key={f.id}>
                       <button
                         type="button"
                         onClick={() => setActiveId(f.id)}
-                        className={`w-full truncate rounded-md px-3 py-2.5 text-left text-sm transition-colors ${
+                        className={`w-full min-h-11 touch-manipulation truncate rounded-md px-3 py-2.5 text-left text-sm transition-colors sm:min-h-0 ${
                           activeId === f.id
                             ? "bg-blue-100 font-medium text-blue-900 ring-1 ring-blue-200"
                             : "text-gray-700 hover:bg-gray-50"
@@ -128,11 +130,11 @@ export default function Home() {
             )}
           </section>
         ) : (
-          <div className="flex h-full min-h-0 shrink-0 items-stretch border-b border-gray-200 bg-white md:w-14 md:flex-col md:border-b-0 md:border-r md:bg-gray-50 md:py-4">
+          <div className="flex h-auto min-h-12 shrink-0 items-stretch border-b border-gray-200 bg-white md:h-full md:min-h-0 md:w-14 md:flex-col md:border-b-0 md:border-r md:bg-gray-50 md:py-4">
             <button
               type="button"
               onClick={() => setUploadPanelOpen(true)}
-              className="flex w-full items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 md:w-14 md:flex-col md:px-0 md:py-2"
+              className="flex min-h-12 w-full touch-manipulation items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 active:bg-gray-100 md:min-h-0 md:w-14 md:flex-col md:px-0 md:py-2"
               aria-label="Show upload panel"
             >
               <svg
@@ -157,8 +159,8 @@ export default function Home() {
           </div>
         )}
 
-        <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden p-6 pt-4 md:pt-6">
-          <h2 className="mb-3 text-sm font-medium text-gray-600">
+        <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 sm:px-4 sm:pb-4 sm:pt-3 md:p-6 md:pt-6">
+          <h2 className="mb-2 text-xs font-medium text-gray-600 sm:mb-3 sm:text-sm">
             Preview
           </h2>
           {activeFile ? (
@@ -167,8 +169,8 @@ export default function Home() {
               fileName={activeFile.name}
             />
           ) : (
-            <div className="flex min-h-0 flex-1 items-center justify-center rounded-lg border-2 border-dashed border-gray-200 bg-white">
-              <p className="text-gray-500">
+            <div className="flex min-h-0 flex-1 items-center justify-center rounded-lg border-2 border-dashed border-gray-200 bg-white px-4 py-8">
+              <p className="max-w-sm text-center text-sm leading-relaxed text-gray-500 sm:text-base">
                 Drop .MD files here or click to browse, then select a file to
                 preview
               </p>

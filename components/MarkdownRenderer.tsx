@@ -6,31 +6,47 @@ import type { Components } from "react-markdown";
 
 const components: Components = {
   h1: ({ children }) => (
-    <h1 className="mb-4 mt-6 text-3xl font-bold text-gray-900">{children}</h1>
+    <h1 className="mb-3 mt-4 break-words text-2xl font-bold text-gray-900 sm:mb-4 sm:mt-6 sm:text-3xl">
+      {children}
+    </h1>
   ),
   h2: ({ children }) => (
-    <h2 className="mb-3 mt-6 text-2xl font-bold text-gray-900">{children}</h2>
+    <h2 className="mb-2 mt-4 break-words text-xl font-bold text-gray-900 sm:mb-3 sm:mt-6 sm:text-2xl">
+      {children}
+    </h2>
   ),
   h3: ({ children }) => (
-    <h3 className="mb-2 mt-4 text-xl font-bold text-gray-900">{children}</h3>
+    <h3 className="mb-2 mt-3 break-words text-lg font-bold text-gray-900 sm:mt-4 sm:text-xl">
+      {children}
+    </h3>
   ),
   h4: ({ children }) => (
-    <h4 className="mb-2 mt-4 text-lg font-bold text-gray-900">{children}</h4>
+    <h4 className="mb-2 mt-3 break-words text-base font-bold text-gray-900 sm:mt-4 sm:text-lg">
+      {children}
+    </h4>
   ),
   h5: ({ children }) => (
-    <h5 className="mb-2 mt-3 text-base font-bold text-gray-900">{children}</h5>
+    <h5 className="mb-2 mt-3 text-sm font-bold text-gray-900 sm:text-base">
+      {children}
+    </h5>
   ),
   h6: ({ children }) => (
-    <h6 className="mb-2 mt-3 text-sm font-bold text-gray-900">{children}</h6>
+    <h6 className="mb-2 mt-2 text-sm font-bold text-gray-900">{children}</h6>
   ),
-  p: ({ children }) => <p className="mb-4 leading-7 text-gray-700">{children}</p>,
+  p: ({ children }) => (
+    <p className="mb-3 break-words text-[15px] leading-7 text-gray-700 sm:mb-4 sm:text-base">
+      {children}
+    </p>
+  ),
   strong: ({ children }) => <strong className="font-bold">{children}</strong>,
   em: ({ children }) => <em className="italic">{children}</em>,
   ul: ({ children }) => (
-    <ul className="mb-4 ml-6 list-disc space-y-1 text-gray-700">{children}</ul>
+    <ul className="mb-4 ml-4 list-disc space-y-1 pl-1 text-[15px] text-gray-700 sm:ml-6 sm:text-base">
+      {children}
+    </ul>
   ),
   ol: ({ children }) => (
-    <ol className="mb-4 ml-6 list-decimal space-y-1 text-gray-700">
+    <ol className="mb-4 ml-4 list-decimal space-y-1 pl-1 text-[15px] text-gray-700 sm:ml-6 sm:text-base">
       {children}
     </ol>
   ),
@@ -71,7 +87,7 @@ const components: Components = {
     );
   },
   pre: ({ children }) => (
-    <pre className="mb-4 overflow-x-auto rounded-lg bg-gray-900 p-4">
+    <pre className="mb-4 max-w-full overflow-x-auto rounded-lg bg-gray-900 p-3 text-[13px] sm:p-4 sm:text-sm [-webkit-overflow-scrolling:touch]">
       {children}
     </pre>
   ),
@@ -90,12 +106,12 @@ const components: Components = {
     <tr className="border-b border-gray-200">{children}</tr>
   ),
   th: ({ children }) => (
-    <th className="border border-gray-300 px-4 py-2 text-left font-semibold text-gray-900">
+    <th className="whitespace-nowrap border border-gray-300 px-2 py-2 text-left text-xs font-semibold text-gray-900 sm:px-4 sm:text-sm">
       {children}
     </th>
   ),
   td: ({ children }) => (
-    <td className="border border-gray-300 px-4 py-2 text-gray-700">
+    <td className="border border-gray-300 px-2 py-2 text-xs text-gray-700 sm:px-4 sm:text-sm">
       {children}
     </td>
   ),
