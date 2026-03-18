@@ -33,10 +33,34 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-50">
-      <header className="border-b border-gray-200 bg-white px-6 py-4">
-        <h1 className="text-xl font-semibold text-gray-900">
+      <header className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 border-b border-gray-200 bg-white px-6 py-4">
+        <h1 className="min-w-0 truncate text-xl font-semibold text-gray-900">
           Markdown File Viewer
         </h1>
+        <div className="flex justify-center">
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            className="rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+            aria-label="Refresh page"
+          >
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+          </button>
+        </div>
+        <div aria-hidden className="min-w-0" />
       </header>
 
       <main className="flex flex-1 flex-col gap-6 p-6 md:flex-row">
