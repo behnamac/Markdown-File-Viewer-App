@@ -2,42 +2,60 @@
 
 import { useRef, useState, useCallback } from "react";
 
+export type LoadedMdFile = { name: string; content: string };
+
 interface FileDropZoneProps {
-  onFileLoad: (content: string, fileName: string) => void;
+  onFilesLoad: (files: LoadedMdFile[]) => void;
   onError?: (message: string) => void;
 }
 
-export function FileDropZone({ onFileLoad, onError }: FileDropZoneProps) {
+function readFileAsText(file: File): Promise<LoadedMdFile> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () =>
+      resolve({ name: file.name, content: reader.result as string });
+    reader.onerror = () => reject(new Error("read failed"));
+    reader.readAsText(file);
+  });
+}
+
+export function FileDropZone({ onFilesLoad, onError }: FileDropZoneProps) {
   const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const isValidFile = (file: File) => {
-    return (
-      file.name.endsWith(".md") || file.name.endsWith(".markdown")
-    );
-  };
+  const isValidFile = (file: File) =>
+    file.name.endsWith(".md") || file.name.endsWith(".markdown");
 
-  const handleFile = useCallback(
-    (file: File) => {
-      if (!isValidFile(file)) {
-        onError?.("Please upload a .md or .markdown file");
+  const processFiles = useCallback(
+    async (fileList: FileList | File[]) => {
+      const all = Array.from(fileList);
+      const valid = all.filter(isValidFile);
+      const skipped = all.length - valid.length;
+
+      if (valid.length === 0) {
+        if (all.length > 0) {
+          onError?.("Please upload .md or .markdown files only");
+        }
         return;
       }
 
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target?.result as string;
-        if (content) {
-          onFileLoad(content, file.name);
+      if (skipped > 0) {
+        onError?.(
+          `${skipped} file(s) skipped (not .md/.markdown). Loaded ${valid.length}.`
+        );
+      }
+
+      try {
+        const results = await Promise.all(valid.map(readFileAsText));
+        onFilesLoad(results);
+        if (skipped === 0) {
           onError?.("");
         }
-      };
-      reader.onerror = () => {
-        onError?.("Failed to read file");
-      };
-      reader.readAsText(file);
+      } catch {
+        onError?.("Failed to read one or more files");
+      }
     },
-    [onFileLoad, onError]
+    [onFilesLoad, onError]
   );
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -56,11 +74,7 @@ export function FileDropZone({ onFileLoad, onError }: FileDropZoneProps) {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
-
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      handleFile(file);
-    }
+    void processFiles(e.dataTransfer.files);
   };
 
   const handleClick = () => {
@@ -68,9 +82,9 @@ export function FileDropZone({ onFileLoad, onError }: FileDropZoneProps) {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      handleFile(file);
+    const list = e.target.files;
+    if (list?.length) {
+      void processFiles(list);
     }
     e.target.value = "";
   };
@@ -95,6 +109,7 @@ export function FileDropZone({ onFileLoad, onError }: FileDropZoneProps) {
         ref={inputRef}
         type="file"
         accept=".md,.markdown"
+        multiple
         onChange={handleInputChange}
         className="hidden"
       />
@@ -111,10 +126,12 @@ export function FileDropZone({ onFileLoad, onError }: FileDropZoneProps) {
           strokeLinejoin="round"
         />
       </svg>
-      <p className="mb-1 text-sm font-medium text-gray-600">
-        Drop your .MD file here or click to browse
+      <p className="mb-1 text-center text-sm font-medium text-gray-600">
+        Drop .MD files here or click to browse
       </p>
-      <p className="text-xs text-gray-500">Supports .md and .markdown files</p>
+      <p className="text-center text-xs text-gray-500">
+        Multiple .md / .markdown files supported
+      </p>
     </div>
   );
 }

@@ -1,18 +1,35 @@
 "use client";
 
-import { useState } from "react";
-import { FileDropZone } from "@/components/FileDropZone";
+import { useState, useCallback } from "react";
+import { FileDropZone, type LoadedMdFile } from "@/components/FileDropZone";
 import { MarkdownPreview } from "@/components/MarkdownPreview";
 
+type MdFileEntry = LoadedMdFile & { id: string };
+
+function createId() {
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+}
+
 export default function Home() {
-  const [content, setContent] = useState<string | null>(null);
-  const [fileName, setFileName] = useState<string>("");
+  const [files, setFiles] = useState<MdFileEntry[]>([]);
+  const [activeId, setActiveId] = useState<string | null>(null);
   const [error, setError] = useState<string>("");
 
-  const handleFileLoad = (fileContent: string, name: string) => {
-    setContent(fileContent);
-    setFileName(name);
-  };
+  const handleFilesLoad = useCallback((loaded: LoadedMdFile[]) => {
+    const withIds: MdFileEntry[] = loaded.map((f) => ({
+      ...f,
+      id: createId(),
+    }));
+
+    setFiles((prev) => [...prev, ...withIds]);
+    setActiveId((current) => {
+      if (withIds.length === 0) return current;
+      if (!current) return withIds[0].id;
+      return current;
+    });
+  }, []);
+
+  const activeFile = files.find((f) => f.id === activeId) ?? null;
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-50">
@@ -23,27 +40,54 @@ export default function Home() {
       </header>
 
       <main className="flex flex-1 flex-col gap-6 p-6 md:flex-row">
-        <section className="flex flex-col md:w-80 md:shrink-0">
+        <section className="flex min-h-0 flex-col md:w-80 md:shrink-0">
           <h2 className="mb-3 text-sm font-medium text-gray-600">
-            Upload a file
+            Upload files
           </h2>
-          <FileDropZone
-            onFileLoad={handleFileLoad}
-            onError={setError}
-          />
+          <FileDropZone onFilesLoad={handleFilesLoad} onError={setError} />
           {error && (
-            <p className="mt-2 text-sm text-red-600">{error}</p>
+            <p className="mt-2 text-sm text-amber-700">{error}</p>
+          )}
+
+          {files.length > 0 && (
+            <div className="mt-4 flex min-h-0 flex-1 flex-col">
+              <h3 className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-500">
+                Your files ({files.length})
+              </h3>
+              <ul className="max-h-[min(50vh,28rem)] space-y-1 overflow-y-auto rounded-lg border border-gray-200 bg-white p-2 shadow-sm">
+                {files.map((f) => (
+                  <li key={f.id}>
+                    <button
+                      type="button"
+                      onClick={() => setActiveId(f.id)}
+                      className={`w-full truncate rounded-md px-3 py-2.5 text-left text-sm transition-colors ${
+                        activeId === f.id
+                          ? "bg-blue-100 font-medium text-blue-900 ring-1 ring-blue-200"
+                          : "text-gray-700 hover:bg-gray-50"
+                      }`}
+                      title={f.name}
+                    >
+                      {f.name}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </section>
 
         <section className="flex min-h-0 flex-1 flex-col">
           <h2 className="mb-3 text-sm font-medium text-gray-600">Preview</h2>
-          {content ? (
-            <MarkdownPreview content={content} fileName={fileName} />
+          {activeFile ? (
+            <MarkdownPreview
+              content={activeFile.content}
+              fileName={activeFile.name}
+            />
           ) : (
             <div className="flex flex-1 items-center justify-center rounded-lg border-2 border-dashed border-gray-200 bg-white">
               <p className="text-gray-500">
-                Drop your .MD file here or click to browse
+                Drop .MD files here or click to browse, then select a file to
+                preview
               </p>
             </div>
           )}
